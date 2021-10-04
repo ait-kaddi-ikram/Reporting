@@ -1,0 +1,227 @@
+﻿@model List<Reporting.ViewModels.FraudesViewModel>
+
+@{
+    ViewData["Title"] = "Fraudes";
+}
+@section Header{
+    <link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet" />
+
+}
+<div class="container">
+    <h1>Etat des Fraudes</h1>
+    <br />
+    <br />
+    <form asp-action="Fraudes" asp-controller="Clientele" method="post">
+
+        <div class="row">
+            <div class="col-3">
+                Date Fact du  <input class="form-control" id="datepicker" type="datetime" value="@ViewData["GetStart"]" name="startDate" />
+            </div>
+            <div class="col-3">
+                Au  <input class="form-control" type="datetime" id="datepicker2" value="@ViewData["GetEnd"]" name="endDate" />
+            </div>
+            <div class="col-3">
+                NUM_CTA_ABT
+                <input class="form-control" type="text" value="@ViewData["ctaAbt"]" name="numCtaAbt" />
+
+            </div>
+            <div class="col-3">
+                NUM_CLI
+                <input class="form-control" type="text" value="@ViewData["NumCli"]" name="numCli" />
+
+            </div>
+        </div>
+
+        <br />
+        <input type="submit" value="Rechercher" class="btn btn-primary" style="width:100px;" />
+        <button class="btn btn-warning text-white" asp-controller="Clientele" asp-action="Export_fraudes" style="width:100px;">Exporter</button>
+
+    </form>
+
+
+
+    <br />
+
+
+
+
+
+    <table id="myTable" class="table-secondary display responsive nowrap">
+        <thead>
+            <tr>
+                <th>
+                    DOP
+                </th>
+                <th>
+                    ID_FAC_CLI
+                </th>
+                <th>
+                    DAT_FAC_CLI
+                </th>
+                <th>
+                    DAT_EXG_FAC_CLI
+                </th>
+                <th>
+                    TYP_FACT_ORI
+                </th>
+                <th>
+                    NUM_CTA_ABT
+                </th>
+                <th>
+                    NUM_TRN_RLV_ABT
+                </th>
+                <th>
+                    LIB_TRN
+                </th>
+                <th>
+                    LIB_CAT_ABT
+                </th>
+                <th>
+                    NUM_CLI
+                </th>
+                <th>
+                    RAI_SOC_CLI
+                </th>
+                <th>
+                    PNO_CLI
+                </th>
+                <th>
+                    RPG_APT_PNT_DRT
+                </th>
+                <th>
+                    IG
+                </th>
+                <th>
+                    COORD_X
+                </th>
+                <th>
+                    COORD_Y
+                </th>
+                <th>
+                    MNT_FAC
+                </th>
+                <th>
+                    LATI_LONG
+                </th>
+                <th>
+                    MNT_AV
+                </th>
+                <th>
+                    MNT_FAC_AV
+                </th>
+                <th>
+                    QTE
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DOP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ID_FAC_CLI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DAT_FAC_CLI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DAT_EXG_FAC_CLI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TYP_FACT_ORI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NUM_CTA_ABT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NUM_TRN_RLV_ABT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LIB_TRN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LIB_CAT_ABT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NUM_CLI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RAI_SOC_CLI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PNO_CLI)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RPG_APT_PNT_DRT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IG)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.COORD_X)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.COORD_Y)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MNT_FAC)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LATI_LONG)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MNT_AV)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MNT_FAC_AV)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QTE)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h4 class="p-0 mb-2 text-black-50" style="width: 250px; border-radius: 8px; background-color: #DCDCDC ">  Total : @ViewBag.total DH</h4>
+    <br />
+</div>
+    @section DTListUsers{
+
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script src="~/lib/bootstrap-datepicker/locales/bootstrap-datepicker.fr.min.js"></script>
+
+        <script src="~/lib/bootstrap-datepicker/js/datepicker-init.js"></script>
+
+        <script>
+        $(document).ready(function () {
+
+
+            $('#myTable').DataTable({
+                    "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json",
+                   
+                }, "responsive": true,
+                "scrollX": true
+                });
+            });
+       
+
+       
+
+        $(function () {
+            $("#datepicker2").datepicker({
+                format: "dd/MM/yyyy",
+                startView: 2,
+                language: "fr"
+            })
+        });
+        </script>
+    }

@@ -1,0 +1,57 @@
+﻿@model Reporting.ViewModels.EditAccountViewModel;
+@{
+    ViewData["Title"] = "Modifier le compte";
+}
+
+<h1 class="text-center">Modifier le compte</h1>
+<br/>
+<br />
+<div class="container c">
+    
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <input asp-for="Id" class="form-control" hidden />
+
+
+            <div class="form-group">
+                <label asp-for="Prenom"></label>
+                <input asp-for="Prenom" class="form-control" style="width:500px"/>
+                <span asp-validation-for="Prenom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nom"></label>
+                <input asp-for="Nom" class="form-control" style="width:500px" />
+                <span asp-validation-for="Nom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Site"></label>
+                <input asp-for="Site" class="form-control" style="width:500px"/>
+                <span asp-validation-for="Site" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direction"></label>
+                <input asp-for="Direction" class="form-control" style="width:500px"/>
+                <span asp-validation-for="Direction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" style="width:500px" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control" style="width:500px" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn-primary">Enregistrer</button>
+        </form>
+
+    </div>
+
+<style>
+    .c{
+        margin-left:500px;
+    }
+</style>

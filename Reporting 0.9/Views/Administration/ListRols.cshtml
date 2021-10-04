@@ -1,0 +1,52 @@
+﻿@model IEnumerable<IdentityRole>
+@{
+    ViewData["Title"] = "Rôles";
+int counter = 1;
+}
+<div class="container">
+
+    <p class="alert alert-dark text-white my-5 text-center">
+        La liste des Rôles
+    </p>
+    <hr />
+    <a asp-action="CreateRole" class="btn btn-primary">Créer un Role</a>
+    <hr />
+
+    <table id="myTable" class="table">
+        <thead class="thread-dark table-hover table-dark">
+            <tr>
+                <td scope="col">
+                    #
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Name)
+                </td>
+
+                <td scope="col">
+                    <span>Operations</span>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (IdentityRole rol in Model)
+            {
+                <tr scope="row">
+                    <td scope="col">
+                        @counter
+                    </td>
+                    <td scope="col">@rol.Name</td>
+
+                    <td scope="col">
+                        <form asp-action="Delete" asp-controller="Administration" asp-route-id="@rol.Id" method="post">
+                            <a asp-action="Update" asp-controller="Administration" asp-route-id="@rol.Id"
+                               style="width: 120px;" class="btn btn-dark mx-2 btn-sm">Modifier</a>
+                            <button onclick="return confirm('voulez-vous vraiment supprimer le rôle : @rol.Name !')" type="submit" style="width: 120px;" class="btn btn-danger mx-2 btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                counter++;
+            }
+        </tbody>
+    </table>
+</div>

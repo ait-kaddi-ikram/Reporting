@@ -1,0 +1,350 @@
+﻿@model List<Reporting.ViewModels.FactureViewModel>
+
+@{
+    ViewData["Title"] = "Facturation";
+   
+}
+@section Header{
+    <link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+}
+<div class="container">
+    <h1>Etat de Facturation</h1>
+    <br />
+    <br />
+    <form asp-action="Facturation" asp-controller="Clientele" method="post">
+
+        <div class="row">
+            <div class="col-3">
+                Date Fact du  <input class="form-control" id="datepicker" type="datetime" value="@ViewData["GetStart"]" name="startDate" />
+            </div>
+            <div class="col-2">
+                Au  <input class="form-control" type="datetime" id="datepicker2" value="@ViewData["GetEnd"]" name="endDate" />
+            </div>
+            <div class="col-2">
+                DOP   <br /> <select class="form-control" name="Facsearch" id="Id_Dop" asp-items='@(new SelectList(ViewBag.Dop, "Id", "Libele",ViewData["selected"]))'>
+                    <option selected>Tous</option>
+                </select>
+            </div>
+            <div class="col-2">
+
+                Agence  <select class="form-control" name="AgenceSearch" id="Id_Agence" asp-items='@(new SelectList(ViewBag.ListeAgence, "Id", "NOM", ViewData["IsSelected"]))'>
+                    <option></option>
+                </select>
+            </div>
+            <div class="col-3">
+                LIBCATEG_ABT
+                <input class="form-control" type="text" value="@ViewData["lib"]" id="txt" name="lib" />
+                <input type="hidden" id="lb" name="Id" />
+            </div>
+        </div>
+
+        <br />
+        <input type="submit" value="Rechercher" style="width:100px;" class="btn btn-primary" />
+        <button class="btn btn-warning text-white" asp-controller="Clientele" asp-action="Export_fact" style="width:100px;">Exporter</button>
+        @*<span>@Html.ActionLink("Exporter", "Export", new { list = Model.Select(m => m.Id).ToList() }, new { @class = "btn btn-success" })</span>*@
+    </form>
+
+
+
+    <br />
+
+
+
+    <table id="myTable" class="table-secondary display responsive nowrap center">
+        <thead>
+            <tr>
+
+                <th>
+                    DOP
+                </th>
+                <th>
+                    DAT_FACT
+                </th>
+                <th>
+                    DAT_EXG_FACT
+                </th>
+                <th>
+                    AGCTRN
+                </th>
+                <th>
+                    CAT_ABT
+                </th>
+                <th>
+                    TYP_FACT
+                </th>
+                <th>
+                    ETA_FACT
+                </th>
+
+                <th>
+                    MNT_FACT
+                </th>
+                <th>
+                    NUMTRN
+                </th>
+                <th>
+                    LIBCATEG_ABT
+                </th>
+                <th>
+                    TYP_FACT_REF
+                </th>
+                <th>
+                    DATE_MAJ
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DOP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DAT_FACT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DAT_EXG_FACT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AGCTRN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CAT_ABT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TYP_FACT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ETA_FACT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MNT_FACT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NUMTRN)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LIBCATEG_ABT)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TYP_FACT_REF)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DATE_MAJ)
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+    <h4 class="p-0 mb-2 text-black-50" style="width: 250px; border-radius: 8px; background-color: #DCDCDC ">  Total : @ViewBag.total DH</h4>
+    <br />
+    <div id="chart_div"></div>
+
+    <div id="chart_divv" style="width: 1000px; height: 1200px;"></div>
+
+</div>
+
+    @section DTListUsers{
+
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script src="~/lib/bootstrap-datepicker/locales/bootstrap-datepicker.fr.min.js"></script>
+
+        <script src="~/lib/bootstrap-datepicker/js/datepicker-init.js"></script>
+
+        <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $('#myTable').DataTable({
+                    "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json",
+                   
+                }, "responsive": true,
+                "scrollX": true
+                });
+            });
+        $(function () {
+            $("#Id_Dop").change(function () {
+                var url = '@Url.Content("~/")' + 'Clientele/getAgenceById';
+                    var ddlsource = "#Id_Dop";
+                    $.getJSON(url, {
+                        id: $(ddlsource).val()
+                    }, function (data) {
+                        var items = '';
+                        $("#Id_Agence").empty();
+                        $.each(data, function (i, row) {
+                            items += "<option value='" + row.value + "'>" + row.text + "</option>";
+                        });
+                        $("#Id_Agence").html(items);
+                    }
+                    )
+                });
+        });
+
+        $(function () {
+            $("#txt").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Clientele/AutoComplete/',
+                        data: { "prefix": request.term },
+                        type: "POST",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText)
+                        },
+                        failure: function (response) {
+                            alert(response.responseText)
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#lb").val(i.item.val);
+                },
+                minLength: 1
+            });
+        });
+
+        $(function () {
+            $("#datepicker2").datepicker({
+                format: "dd/MM/yyyy",
+                startView: 2,
+                language: "fr"
+            })
+        });
+
+
+
+
+
+        google.charts.load('current', {
+            packages: ['corechart', 'bar']
+        });
+        google.charts.setOnLoadCallback(LoadData);
+
+        function LoadData() {
+            $.ajax({
+
+                url: '/Clientele/FactureChart/',
+                dataType: "json",
+                type: "GET",
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    toastr.error(err.message);
+                },
+                success: function (data) {
+                    FactureChart(data);
+                    return false;
+                }
+            });
+            return false;
+        }
+
+        function FactureChart(data) {
+            var dataArray = [
+                ['dop', 'mnT_FACT_TOTAL']
+            ];
+            $.each(data, function (i, item) {
+                dataArray.push([item.dop, item.mnT_FACT_TOTAL]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                title: 'Montant totale pour chaque Dop ',
+                chartArea: {
+                    width: '50%'
+                },
+                colors: ['#b0120a', '#7b1fa2'],
+                hAxis: {
+                    title: 'DOP',
+                    minValue: 0
+                },
+                vAxis: {
+                    title: 'Montant Total'
+                }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+            return false;
+        }
+
+        google.charts.load('current', {
+            packages: ['corechart', 'bar']
+        });
+
+
+
+        google.charts.load('current', {
+            packages: ['corechart', 'bar']
+        });
+        google.charts.setOnLoadCallback(LoadDataa);
+
+        function LoadDataa() {
+            $.ajax({
+
+                url: '/Clientele/AgenceChart/',
+                dataType: "json",
+                type: "GET",
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    toastr.error(err.message);
+                },
+                success: function (data) {
+                    AgenceChart(data);
+                    return false;
+                }
+            });
+            return false;
+        }
+
+        function AgenceChart(data) {
+            var dataArray = [
+                ['agence', 'mnT_FACT_TOTAL']
+            ];
+            $.each(data, function (i, item) {
+                dataArray.push([item.agence, item.mnT_FACT_TOTAL]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                title: 'Montants Totals pour chaque Agence ',
+                chartArea: {
+                    width: '50%',
+                           },
+                colors: ['#b0120a', '#7b1fa2'],
+                hAxis: {
+                    title: ' Montant Total',
+                    minValue: 0,
+                                  },
+                vAxis: {
+                    title: 'Agences'
+                }
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('chart_divv'));
+
+            chart.draw(data, options);
+            return false;
+        }
+        </script>
+    }
+
+    <style>
+        table {
+            margin-left: 100px;
+        }
+    </style>

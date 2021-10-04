@@ -1,0 +1,245 @@
+﻿
+
+@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Reporting</title>
+    <link rel="icon" type="logo_rep/jpg" sizes="16x16" href="~/Images/logo_rep.png">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <link href="~/lib/datatables/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/admineLTE/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/admineLTE/plugins/summernote/summernote-bs4.min.css">
+
+    @RenderSection("styles", false);
+    @RenderSection("Header", false);
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <header>
+        @if (signInManager.IsSignedIn(User))
+        {
+
+
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm  navbar-dark bg-light border-bottom box-shadow mb-3">
+            @if (signInManager.IsSignedIn(User))
+            {
+
+                <img src="~/Images/Logo Menu.png" class="img-fluid" alt="image" />
+              
+                    <a class="rep" asp-area="" asp-controller="Home" asp-action="Index" style="  font-style:italic;font:bolder 20px;">Reporting</a>
+             
+                <div class="container">
+
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"> </span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                        <ul class="navbar-nav flex-grow-1">
+
+
+
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Acueil</a>
+                            </li>
+
+
+                            <li class=" nav-item dropdown">
+
+                                <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown" href="#" role="button">Clientele </a>
+                                <div class="dropdown-menu" >
+                                    <a class="dropdown-item" asp-area="" asp-controller="Clientele" asp-action="Facturation">Facturation</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Clientele" asp-action="Fraudes">Fraudes</a>
+                                </div>
+
+                            </li>
+
+                            @if (signInManager.IsSignedIn(User) && User.IsInRole("Administration"))
+                            {
+                                <li class=" nav-item dropdown" >
+
+                                    <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown" href="#" role="button">Administration </a>
+                                    <div class="dropdown-menu" style="width:8em;">
+                                        <a class="dropdown-item" asp-action="ListRols" asp-controller="Administration">Rôles</a>
+                                        <a class="dropdown-item" asp-action="ListUsers" asp-controller="Administration">Utiisateurs</a>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                        <ul class="navbar-nav ml-auto">
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                string FullName = User.Identity.Name;
+                                AppUser user = await userManager.FindByNameAsync(User.Identity.Name);
+                                if (user != null && !string.IsNullOrEmpty(user.Prenom))
+                                {
+                                    FullName = user.Prenom.ToUpper();
+                                }
+
+                                <li class=" nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown" href="#" role="button">Bienvenue @FullName</a>
+                                    <div class="dropdown-menu"  style="width:15em;">
+                                        <a class="dropdown-item" asp-route-id="@user.Id" asp-action="EditAccount" asp-controller="Account">Modifier le compte</a>
+                                        <a class="dropdown-item" href="#">Aide</a>
+                                        <div>
+                                            <ul class="navbar-nav">
+                                                <li class="nav-item">
+                                                    <form asp-action="Logout" asp-controller="Account" method="post">
+
+                                                        <button class="btn btn-outline-secondary" style="width: 15em; margin-left: -100px; margin-bottom: -10px;">
+
+                                                            <span>Déconection @FullName</span>
+
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+                                </li>
+
+                            }
+
+
+                        </ul>
+
+                    </div>
+                </div>
+            }
+        </nav>
+        }
+    </header>
+
+
+
+    <main role="main" class="pb-1">
+        @RenderBody()
+    </main>
+
+    <br />
+    <br />
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Reporting
+        </div>
+    </footer>
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/admineLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+
+    <!-- ChartJS -->
+    <script src="~/admineLTE/plugins/chart.js/Chart.min.js"></script>
+    <!-- Sparkline -->
+    <script src="~/admineLTE/plugins/sparklines/sparkline.js"></script>
+    <!-- JQVMap -->
+    <script src="~/admineLTE/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/admineLTE/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="~/admineLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <!-- daterangepicker -->
+    <script src="~/admineLTE/plugins/moment/moment.min.js"></script>
+    <script src="~/admineLTE/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/admineLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/admineLTE/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/admineLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/admineLTE/dist/js/adminlte.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/admineLTE/dist/js/demo.js"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="~/admineLTE/dist/js/pages/dashboard.js"></script>
+
+
+
+
+
+    @await RenderSectionAsync("Scripts", required: false);
+
+    @RenderSection("DTListUsers", required: false);
+
+</body>
+</html>
+<style>
+    nav {
+        margin-block-start: -30px;
+    }
+
+
+    .rep {
+        font-size: 40px;
+        font: bolder 40px;
+        color: black;
+        margin-left:5px;
+        font-weight: bold;
+    }
+
+    nav ul li {
+        cursor: pointer;
+    }
+
+        nav ul li a {
+            color: gray;
+            display: block;
+            padding: 0 6px;
+          /*  line-height: 70px;*/
+            font-size: 20px;
+            background: #F8F8FF;
+            transition: .10s;
+        }
+
+            nav ul li a:hover,
+            nav ul li a.active {
+                color: #F8F8FF;
+            }
+    nav ul{
+        margin-left:100px;
+    }
+    img {
+        margin-left: -10px;
+        margin-top: -6px;
+        margin-bottom: -10px;
+    }
+</style>

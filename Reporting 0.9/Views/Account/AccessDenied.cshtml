@@ -1,0 +1,19 @@
+﻿@{ 
+    ViewBag.Title = "accès non autorisé";
+}
+
+
+<div class="my-5">
+    <div class="card text-center">
+        <div class="card-header">
+            <span class="display-4"> @ViewBag.Message </span>
+        </div>
+        <div class="card-body">
+            <img src="~/Images/i.jpg" asp-append-version="true" />
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Retour à l'accuiel</a>
+        </div>
+    </div>
+        
+</div>

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<AppUser>
+@{
+    int counter = 1;
+    ViewBag.Title = "Gestion des utilisateurs";
+}
+<div class="container">
+    <div class="my-5">
+        <span class="text-info font-weight-normal display-3">La lise des Utilisateurs</span>
+    </div>
+
+    <div class="my-5">
+    </div>
+
+    <div class="my-3">
+        <a asp-action="Register" asp-controller="Administration" class="btn btn-sm btn-primary">Ajouter un Nouveau Utilisateur</a>
+    </div>
+    <table id="myTable" class="table">
+        <thead class="thread-dark table-hover table-dark">
+            <tr>
+                <td scope="col">
+                    #
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Prenom)
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Nom)
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Site)
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Direction)
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Email)
+                </td>
+                <td scope="col">
+                    <span>Operations</span>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (AppUser user in Model)
+            {
+                <tr scope="row">
+                    <td scope="col">
+                        @counter
+                    </td>
+                    <td scope="col">@user.Prenom</td>
+                    <td scope="col">@user.Nom</td>
+                    <td scope="col">@user.Site</td>
+                    <td scope="col">@user.Direction</td>
+                    <td scope="col">@user.Email</td>
+                    <td scope="col">
+                        <form asp-action="DeleteUser" asp-controller="Administration" asp-route-id="@user.Id" method="post">
+                            <a asp-action="EditUser" asp-controller="Administration" asp-route-id="@user.Id" style="width: 120px;" class="btn btn-dark mx-2 btn-sm">Modifier</a>
+                            <button onclick="return confirm('voulez-vous vraiment supprimer l\'utilisateur :@user.Email !')" type="submit" style="width: 120px;" class="btn btn-danger mx-2 btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                counter++;
+            }
+        </tbody>
+    </table>
+
+    <div class="my-3" asp-validation-summary="All">
+
+    </div>
+</div>
+
+
+@section DTListUsers{
+
+    <script>
+        $(document).ready(function () {
+
+
+            $('#myTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json",
+
+                }
+            });
+        });
+    </script>
+}

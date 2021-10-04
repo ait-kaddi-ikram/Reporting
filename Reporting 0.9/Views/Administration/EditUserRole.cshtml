@@ -1,0 +1,41 @@
+﻿@model List<Reporting.ViewModels.EditUsersRoleViewModel>
+@{ 
+    ViewBag.Title = "modifier les Roles des utilisateurs";
+  
+}
+<div class="container">
+    <form method="post">
+
+        <div class="my-5">
+            <div class="card">
+                <div class=" card-header">
+                    <span class="dosplay-3"> Ajouter ou supprimer un utilisateur dans un role</span>
+                    <hr />
+                    <input hidden disabled value="@ViewBag.RoleId" class="form-control" />
+                </div>
+                <div class="card-body">
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var uniqueName = "User" + i;
+                        <div class="form-check m-1">
+                            <input asp-for="@Model[i].UserId" hidden />
+                            <input asp-for="@Model[i].UserName" hidden />
+
+                            <input asp-for="@Model[i].IsSelected" Id="@uniqueName" class="form-check-input" style="width:500px"/>
+                            <label for="@uniqueName" asp-for="@Model[i].IsSelected" class="col-form-label">@Model[i].UserName.ToUpper()</label>
+                        </div>
+
+                    }
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Update" asp-route-id="@ViewBag.RoleId" class="btn btn-primary mx-2">Retour au Role</a>
+                    <button type="submit" class=" btn btn-success"  style="width:100px;">Modifier</button>
+                    <br />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+    <div class="container">
